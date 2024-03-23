@@ -9,9 +9,9 @@ const LINES = [
     "Payments",
     "Bridging",
     "Identity",
-    "Blockchain",
     "Rewards",
     "Membership",
+    "Blockchain",
     "Transactions",
 ];
 
@@ -44,8 +44,6 @@ export function TextAnimation() {
         return Math.floor(totalLines / 2 - position);
     }, [totalLines]);
 
-    // use gyroscope to get position
-
     const textAnimateStyle = {
         transform: `translateY(${position * lineHeight}em)`,
     }
@@ -76,6 +74,7 @@ export function TextAnimation() {
     }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
     React.useEffect(() => {
+        // use gyroscope to get position
         const getGyroscopePosition = (e: DeviceOrientationEvent) => {
             const position = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
             const currentLineIndex = getCurrentLineIdx(position);
@@ -109,14 +108,8 @@ export function TextAnimation() {
                 </span>
                 <span className="flex gap-3 ml-3">
                     <span className="font-extralight">made</span>
-                    <span className="relative w-[100px] md:w-[200px] h-auto">
-                        <Image
-                            src="/../simpl3.svg"
-                            alt="simpl3 Logo"
-                            fill={true}
-                            className="mt-px md:mt-1"
-                        />
-                    </span>
+                    <span className="font-black">simple.</span>
+
                 </span>
             </h1>
         </div>

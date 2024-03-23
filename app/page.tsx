@@ -20,17 +20,16 @@ export default function Home() {
 
             <TextAnimation />
 
-            <div className="flex items-center justify-center py-12 bg-muted w-full">
+            <div className="flex items-center justify-center py-12 w-full">
                 <div className="mx-auto grid w-[450px] gap-6">
-
+                    <p className="text-balance text-muted-foreground text-center text-xs">
+                        Want to know more?
+                    </p>
                     <div className="grid gap-4">
                         <Button type="submit" className="w-full" size={"lg"}>
                             Get started
                         </Button>
                     </div>
-                    <p className="text-balance text-muted-foreground text-center text-xs">
-                        <Link href="">Learn more</Link>
-                    </p>
                 </div>
             </div>
         </div >
