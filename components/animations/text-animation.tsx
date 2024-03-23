@@ -18,7 +18,6 @@ const LINES = [
 // Should be in sync with CSS line-height
 const lineHeight = 1;
 
-
 export function TextAnimation() {
     // repeat text options 3 times
     const linesToRender = LINES.concat(LINES, LINES);
@@ -26,38 +25,26 @@ export function TextAnimation() {
     const uniqueLines = LINES.length;
     const totalLines = linesToRender.length;
 
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    }, [])
 
     const [position, setPosition] = React.useState(0);
-    const [currentLineIndex, setCurrentLineIndex] = React.useState(Math.floor(totalLines/2));
+    const [currentLineIndex, setCurrentLineIndex] = React.useState(Math.floor(totalLines / 2));
 
     // Set position according to number of lines, so it never goes beyond the set
-    const calculateProportionalPosition = (position: number) => {
-        return Math.floor((position - 0.5)/(uniqueLines + 1) * 100);
-    }
+    const calculateProportionalPosition = React.useCallback((position: number) => {
+        return Math.floor((position - 0.5) / (uniqueLines + 1) * 100);
+    }, [uniqueLines]);
 
     // Calculate highlighted line based on position, starting from the middle
-    const getCurrentLineIdx = (position: number) => {
-        return Math.floor(totalLines/2 - position);
-    }
+    const getCurrentLineIdx = React.useCallback((position: number) => {
+        return Math.floor(totalLines / 2 - position);
+    }, [totalLines]);
 
     // use gyroscope to get position
-    const getGyroscopePosition = (e: DeviceOrientationEvent) => {
-        const position = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
-        const currentLineIndex = getCurrentLineIdx(position);
-        
-        setCurrentLineIndex(currentLineIndex);
-        setPosition(position);
-    }
-
-    // get mouse vertical position to get position
-    const getMousePosition = (e: MouseEvent) => {
-        const position = calculateProportionalPosition(e.clientY / window.innerHeight);
-        const currentLineIndex = getCurrentLineIdx(position);
-        
-        setCurrentLineIndex(currentLineIndex);
-        setPosition(position);
-    }
 
     const textAnimateStyle = {
         transform: `translateY(${position * lineHeight}em)`,
@@ -65,26 +52,44 @@ export function TextAnimation() {
 
     const calcTextColor = (idx: number) => {
         // if text index === idx, opacity 100%, otherwise should be less opacity the further away from the currentLineIndex
-        let opacity = Math.max(0, 1 - Math.abs(currentLineIndex - idx)/5) - 0.2;
-        if(idx === currentLineIndex) {
+        let opacity = Math.max(0, 1 - Math.abs(currentLineIndex - idx) / 5) - 0.2;
+        if (idx === currentLineIndex) {
             opacity = 1;
         }
         return `rgba(0, 0, 0, ${opacity})`;
     }
 
     React.useEffect(() => {
-        if(!isMobile) {
+        // get mouse vertical position to get position
+        const getMousePosition = (e: MouseEvent) => {
+            const position = calculateProportionalPosition(e.clientY / window.innerHeight);
+            const currentLineIndex = getCurrentLineIdx(position);
+
+            setCurrentLineIndex(currentLineIndex);
+            setPosition(position);
+        }
+
+        if (!isMobile) {
             document.addEventListener("mousemove", getMousePosition);
             return () => document.removeEventListener("mousemove", getMousePosition);
         }
-    });
+    }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
     React.useEffect(() => {
-        if(isMobile) {
+        const getGyroscopePosition = (e: DeviceOrientationEvent) => {
+            const position = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
+            const currentLineIndex = getCurrentLineIdx(position);
+
+            setCurrentLineIndex(currentLineIndex);
+            setPosition(position);
+        }
+
+
+        if (isMobile) {
             window.addEventListener("deviceorientation", getGyroscopePosition);
             return () => window.removeEventListener("deviceorientation", getGyroscopePosition);
         }
-    });
+    }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
     const headingClasses = cn(museoModerno.className, "flex items-center text-2xl sm:text-4xl md:text-5xl lg:text-7xl")
 
@@ -96,7 +101,7 @@ export function TextAnimation() {
                         <span
                             key={idx}
                             className="transition duration-100"
-                            style={{color: calcTextColor(idx)}}
+                            style={{ color: calcTextColor(idx) }}
                         >
                             {text}
                         </span>
