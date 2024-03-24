@@ -5,13 +5,15 @@ import { cn } from "@/lib/utils"
 import { museoModerno } from "@/app/fonts";
 
 const LINES = [
-    "Payments",
-    "Bridging",
-    "Identity",
-    "Rewards",
-    "Membership",
     "Blockchain",
-    "Transactions",
+    "Rewards",
+    "Subscriptions",
+    "Payments",
+    "Notifications",
+    "Bridging",
+    "Membership",
+    "Identity",
+    "Accounts",
 ];
 
 // Should be in sync with CSS line-height
