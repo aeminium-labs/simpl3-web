@@ -26,12 +26,19 @@ type TextAnimationProps = {
     extraLinesToShow?: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
-export function TextAnimation({ textSize, lines = LINES, extraLinesToShow = 4 }: TextAnimationProps) {
+export function TextAnimation({
+    textSize,
+    lines = LINES,
+    extraLinesToShow: _extraLinesToShow = 5
+}: TextAnimationProps) {
     // repeat text options 3 times, so extra lines are shown above and below
     const linesToRender = lines.concat(lines, lines);
 
     const uniqueLines = lines.length;
     const totalLines = linesToRender.length;
+
+    // Number of extra lines to show should not exceed the number of unique lines
+    const extraLinesToShow = Math.min(_extraLinesToShow, uniqueLines);
 
     const [isMobile, setIsMobile] = React.useState(false);
 
@@ -43,8 +50,8 @@ export function TextAnimation({ textSize, lines = LINES, extraLinesToShow = 4 }:
     const [currentLineIndex, setCurrentLineIndex] = React.useState(Math.floor(totalLines / 2));
 
     // Set position according to number of lines, so it never goes beyond the middle set
-    const calculateProportionalPosition = React.useCallback((position: number) => {
-        return Math.floor((position - 0.5) / (uniqueLines + 1) * 100);
+    const calculateProportionalPosition = React.useCallback((scroll: number) => {
+        return Math.floor((scroll -0.5) * (uniqueLines + 1));
     }, [uniqueLines]);
 
     // Calculate highlighted line based on position, starting from the middle
@@ -87,11 +94,11 @@ export function TextAnimation({ textSize, lines = LINES, extraLinesToShow = 4 }:
     React.useEffect(() => {
         // get mouse vertical position to get position
         const getMousePosition = (e: MouseEvent) => {
-            const position = calculateProportionalPosition(e.clientY / window.innerHeight);
-            const currentLineIndex = getCurrentLineIdx(position);
+            const newPosition = calculateProportionalPosition(e.clientY / window.innerHeight);
+            const currentLineIndex = getCurrentLineIdx(newPosition);
 
             setCurrentLineIndex(currentLineIndex);
-            setPosition(position);
+            setPosition(newPosition);
         }
 
         if (!isMobile) {
@@ -103,11 +110,11 @@ export function TextAnimation({ textSize, lines = LINES, extraLinesToShow = 4 }:
     React.useEffect(() => {
         // use gyroscope to get position
         const getGyroscopePosition = (e: DeviceOrientationEvent) => {
-            const position = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
-            const currentLineIndex = getCurrentLineIdx(position);
+            const newPosition = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
+            const currentLineIndex = getCurrentLineIdx(newPosition);
 
             setCurrentLineIndex(currentLineIndex);
-            setPosition(position);
+            setPosition(newPosition);
         }
 
 
