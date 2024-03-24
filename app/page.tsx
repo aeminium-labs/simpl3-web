@@ -2,20 +2,23 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { TextAnimation } from "@/components/animations/text-animation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
     return (
-        <div className="container h-screen flex flex-col items-start justify-start max-w-none  px-0">
-            <div className="flex-row p-10 flex dark:border-r ">
-                <div className="z-20 flex items-center text-lg font-medium">
+        <div className="container h-screen flex flex-col items-start justify-start space max-w-none  px-0">
+            <div className="flex-row p-10 flex justify-between dark:border-r w-full">
+                <div className="z-20 flex items-center text-lg font-medium relative">
                     <Image
                         src="/simpl3.svg"
                         alt="simpl3 Logo"
                         width={100}
-                        height={24}
+                        height={34}
                         priority
+                        className="text-foreground"
                     />
                 </div>
+                <div><ThemeToggle /></div>
             </div>
 
             <TextAnimation />

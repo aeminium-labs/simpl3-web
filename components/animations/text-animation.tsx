@@ -3,7 +3,6 @@
 import React from "react";
 import { cn } from "@/lib/utils"
 import { museoModerno } from "@/app/fonts";
-import Image from "next/image";
 
 const LINES = [
     "Payments",
@@ -48,13 +47,17 @@ export function TextAnimation() {
         transform: `translateY(${position * lineHeight}em)`,
     }
 
-    const calcTextColor = (idx: number) => {
+    const getTextOpacity = (idx: number) => {
+        // Preload Tailwind classes
+        // opacity-[0] opacity-[0.03]  opacity-[0.2] opacity-[0.37] opacity-[0.53] opacity-[1]
+
         // if text index === idx, opacity 100%, otherwise should be less opacity the further away from the currentLineIndex
-        let opacity = Math.max(0, 1 - Math.abs(currentLineIndex - idx) / 5) - 0.2;
+        let opacity = Math.max(0, 1 - Math.abs(currentLineIndex - idx) / 6) - 0.3;
+        opacity = Math.max(0, Math.round(opacity * 100) / 100)
         if (idx === currentLineIndex) {
             opacity = 1;
         }
-        return `rgba(0, 0, 0, ${opacity})`;
+        return `opacity-[${opacity}]`;
     }
 
     React.useEffect(() => {
@@ -95,12 +98,11 @@ export function TextAnimation() {
     return (
         <div className="flex items-center justify-center h-full w-full text-2xl leading-relaxed font-light overflow-hidden">
             <h1 className={headingClasses}>
-                <span className="flex flex-col leading-none font-black text-right transition duration-100 select-none" style={textAnimateStyle}>
+                <span className="flex flex-col leading-none font-black text-right transition-transform select-none" style={textAnimateStyle}>
                     {linesToRender.map((text, idx) => (
                         <span
                             key={idx}
-                            className="transition duration-100"
-                            style={{ color: calcTextColor(idx) }}
+                            className={cn("transition-opacity text-foreground", getTextOpacity(idx))}
                         >
                             {text}
                         </span>
