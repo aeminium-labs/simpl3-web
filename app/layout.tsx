@@ -5,8 +5,11 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 
 export const metadata: Metadata = {
-    title: "simpl3",
-    description: "Blockchain made simpl3",
+    title: "simpl3 - The protocol for building web3 products",
+    description: "Build better products for the web3 generation with simpl3's protocol and access dozens of services with one click. Blockchain doesn't need to be hard, it can be made simpl3.",
+    openGraph: {
+
+    }
 };
 
 export default function RootLayout({
