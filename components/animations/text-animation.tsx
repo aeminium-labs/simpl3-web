@@ -29,7 +29,7 @@ type TextAnimationProps = {
 export function TextAnimation({
     textSize,
     lines = LINES,
-    extraLinesToShow: _extraLinesToShow = 5
+    extraLinesToShow: _extraLinesToShow = 4
 }: TextAnimationProps) {
     // repeat text options 3 times, so extra lines are shown above and below
     const linesToRender = lines.concat(lines, lines);
@@ -51,7 +51,7 @@ export function TextAnimation({
 
     // Set position according to number of lines, so it never goes beyond the middle set
     const calculateProportionalPosition = React.useCallback((scroll: number) => {
-        return Math.floor((scroll -0.5) * (uniqueLines + 1));
+        return Math.floor((scroll - 0.5) * (uniqueLines + 1));
     }, [uniqueLines]);
 
     // Calculate highlighted line based on position, starting from the middle
@@ -65,24 +65,24 @@ export function TextAnimation({
 
     const getTextOpacity = (idx: number) => {
         // Preload Tailwind classes
-        // opacity-[0] opacity-[0.7] opacity-[1]
+        // opacity-[0] opacity-[0.6] opacity-[1]
         // extraLinesToShow = 5
-        // opacity-[0.14] opacity-[0.28] opacity-[0.42] opacity-[0.56]
+        // opacity-[0.12] opacity-[0.24] opacity-[0.36] opacity-[0.48]
         // extraLinesToShow = 4
-        // opacity-[0.18] opacity-[0.35] opacity-[0.52]
+        // opacity-[0.15] opacity-[0.3] opacity-[0.45]
         // extraLinesToShow = 3
-        // opacity-[0.23] opacity-[0.47]
+        // opacity-[0.2] opacity-[0.4]
         // extraLinesToShow = 2
-        // opacity-[0.35]
-        
+        // opacity-[0.3]
+
         const distanceFromCurrentIdx = Math.abs(currentLineIndex - idx);
 
         // if text index === idx, opacity is 100%, otherwise should have less
         // opacity the further away from the currentLineIndex, starting at 0.7
         let opacity = 0;
-        if(extraLinesToShow !== 0) {
-            const offset = 0.7 * (distanceFromCurrentIdx - 1) / extraLinesToShow;
-            opacity = Math.max(0, Math.round((0.7 - offset) * 100) / 100);
+        if (extraLinesToShow !== 0) {
+            const offset = 0.6 * (distanceFromCurrentIdx - 1) / extraLinesToShow;
+            opacity = Math.max(0, Math.round((0.6 - offset) * 100) / 100);
         }
 
         if (idx === currentLineIndex) {
@@ -128,7 +128,7 @@ export function TextAnimation({
     const headingClasses = cn(museoModerno.className, textSizeClasses, "flex items-center")
 
     return (
-        <div className="flex items-center justify-center h-full w-full overflow-hidden">
+        <div className="fixed top-0 flex items-center justify-center h-full w-full overflow-hidden">
             <h1 className={headingClasses}>
                 <span className="flex flex-col leading-none font-black text-right transition-transform select-none" style={textAnimateStyle}>
                     {linesToRender.map((text, idx) => (

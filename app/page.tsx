@@ -8,7 +8,7 @@ import { NewTwitterIcon } from "@/components/icons/huge-icons";
 export default function Home() {
     return (
         <div className="container h-screen flex flex-col items-start justify-start space max-w-none  px-0">
-            <div className="flex-row p-10 flex justify-between dark:border-r w-full">
+            <div className="flex-row p-10 flex justify-between dark:border-r w-full z-10">
                 <div className="z-20 flex items-center text-lg font-medium relative text-foreground">
                     <Logo width={100} height="auto" />
                 </div>
@@ -22,14 +22,14 @@ export default function Home() {
 
             <TextAnimation />
 
-            <div className="flex items-center justify-center py-12 w-full">
-                <div className="mx-auto grid w-[450px] gap-6">
+            <div className="fixed bottom-0 backdrop-blur-md bg-background/10 flex items-center justify-center p-4 md:p-10 w-full">
+                <div className="mx-auto grid w-[450px] gap-6 ">
                     <p className="text-balance text-muted-foreground text-center text-xs">
                         Want to see it in action?
                     </p>
                     <div className="grid gap-4">
                         <Button type="submit" className="w-full" size={"lg"} disabled>
-                            Get started
+                            Launching soon!
                         </Button>
                     </div>
                 </div>
