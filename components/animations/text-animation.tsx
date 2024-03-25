@@ -19,12 +19,26 @@ const LINES = [
 // Should be in sync with CSS line-height
 const lineHeight = 1;
 
-export function TextAnimation() {
-    // repeat text options 3 times
-    const linesToRender = LINES.concat(LINES, LINES);
+type TextAnimationProps = {
+    textSize?: string;
+    lines?: string[];
+    // Number of extra lines to show above and below highlighted line
+    extraLinesToShow?: 0 | 1 | 2 | 3 | 4 | 5;
+}
 
-    const uniqueLines = LINES.length;
+export function TextAnimation({
+    textSize,
+    lines = LINES,
+    extraLinesToShow: _extraLinesToShow = 5
+}: TextAnimationProps) {
+    // repeat text options 3 times, so extra lines are shown above and below
+    const linesToRender = lines.concat(lines, lines);
+
+    const uniqueLines = lines.length;
     const totalLines = linesToRender.length;
+
+    // Number of extra lines to show should not exceed the number of unique lines
+    const extraLinesToShow = Math.min(_extraLinesToShow, uniqueLines);
 
     const [isMobile, setIsMobile] = React.useState(false);
 
@@ -35,9 +49,9 @@ export function TextAnimation() {
     const [position, setPosition] = React.useState(0);
     const [currentLineIndex, setCurrentLineIndex] = React.useState(Math.floor(totalLines / 2));
 
-    // Set position according to number of lines, so it never goes beyond the set
-    const calculateProportionalPosition = React.useCallback((position: number) => {
-        return Math.floor((position - 0.5) / (uniqueLines + 1) * 100);
+    // Set position according to number of lines, so it never goes beyond the middle set
+    const calculateProportionalPosition = React.useCallback((scroll: number) => {
+        return Math.floor((scroll -0.5) * (uniqueLines + 1));
     }, [uniqueLines]);
 
     // Calculate highlighted line based on position, starting from the middle
@@ -51,11 +65,26 @@ export function TextAnimation() {
 
     const getTextOpacity = (idx: number) => {
         // Preload Tailwind classes
-        // opacity-[0] opacity-[0.03]  opacity-[0.2] opacity-[0.37] opacity-[0.53] opacity-[1]
+        // opacity-[0] opacity-[0.7] opacity-[1]
+        // extraLinesToShow = 5
+        // opacity-[0.14] opacity-[0.28] opacity-[0.42] opacity-[0.56]
+        // extraLinesToShow = 4
+        // opacity-[0.18] opacity-[0.35] opacity-[0.52]
+        // extraLinesToShow = 3
+        // opacity-[0.23] opacity-[0.47]
+        // extraLinesToShow = 2
+        // opacity-[0.35]
+        
+        const distanceFromCurrentIdx = Math.abs(currentLineIndex - idx);
 
-        // if text index === idx, opacity 100%, otherwise should be less opacity the further away from the currentLineIndex
-        let opacity = Math.max(0, 1 - Math.abs(currentLineIndex - idx) / 6) - 0.3;
-        opacity = Math.max(0, Math.round(opacity * 100) / 100)
+        // if text index === idx, opacity is 100%, otherwise should have less
+        // opacity the further away from the currentLineIndex, starting at 0.7
+        let opacity = 0;
+        if(extraLinesToShow !== 0) {
+            const offset = 0.7 * (distanceFromCurrentIdx - 1) / extraLinesToShow;
+            opacity = Math.max(0, Math.round((0.7 - offset) * 100) / 100);
+        }
+
         if (idx === currentLineIndex) {
             opacity = 1;
         }
@@ -65,11 +94,11 @@ export function TextAnimation() {
     React.useEffect(() => {
         // get mouse vertical position to get position
         const getMousePosition = (e: MouseEvent) => {
-            const position = calculateProportionalPosition(e.clientY / window.innerHeight);
-            const currentLineIndex = getCurrentLineIdx(position);
+            const newPosition = calculateProportionalPosition(e.clientY / window.innerHeight);
+            const currentLineIndex = getCurrentLineIdx(newPosition);
 
             setCurrentLineIndex(currentLineIndex);
-            setPosition(position);
+            setPosition(newPosition);
         }
 
         if (!isMobile) {
@@ -81,11 +110,11 @@ export function TextAnimation() {
     React.useEffect(() => {
         // use gyroscope to get position
         const getGyroscopePosition = (e: DeviceOrientationEvent) => {
-            const position = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
-            const currentLineIndex = getCurrentLineIdx(position);
+            const newPosition = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
+            const currentLineIndex = getCurrentLineIdx(newPosition);
 
             setCurrentLineIndex(currentLineIndex);
-            setPosition(position);
+            setPosition(newPosition);
         }
 
 
@@ -95,10 +124,11 @@ export function TextAnimation() {
         }
     }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
-    const headingClasses = cn(museoModerno.className, "flex items-center text-2xl sm:text-4xl md:text-5xl lg:text-7xl")
+    const textSizeClasses = textSize || "text-2xl sm:text-4xl md:text-5xl lg:text-7xl";
+    const headingClasses = cn(museoModerno.className, textSizeClasses, "flex items-center")
 
     return (
-        <div className="flex items-center justify-center h-full w-full text-2xl leading-relaxed font-light overflow-hidden">
+        <div className="flex items-center justify-center h-full w-full overflow-hidden">
             <h1 className={headingClasses}>
                 <span className="flex flex-col leading-none font-black text-right transition-transform select-none" style={textAnimateStyle}>
                     {linesToRender.map((text, idx) => (
@@ -110,10 +140,9 @@ export function TextAnimation() {
                         </span>
                     ))}
                 </span>
-                <span className="flex gap-3 ml-3">
+                <span className="flex gap-1 sm:gap-2 md:gap-3 ml-1 sm:ml-2 md:ml-3">
                     <span className="font-extralight">made</span>
                     <span className="font-black">simple.</span>
-
                 </span>
             </h1>
         </div>
