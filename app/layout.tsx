@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://www.madesimpl3.com'),
-    title: "simpl3 - The protocol for building web3 products",
+    title: "simpl3 - The protocol for building great (web3) products",
     description: "Build better products for the web3 generation with simpl3's protocol and access dozens of services with one click. Blockchain doesn't need to be hard, it can be made simpl3.",
     icons: {
         icon: [
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     },
     manifest: "/site.webmanifest",
     openGraph: {
-        title: "simpl3 - The protocol for building web3 products",
+        title: "simpl3 - The protocol for building great (web3) products",
         description: "Build better products for the web3 generation with simpl3's protocol and access dozens of services with one click. Blockchain doesn't need to be hard, it can be made simpl3.",
         url: "https://www.madesimpl3.com",
         siteName: "simpl3",
