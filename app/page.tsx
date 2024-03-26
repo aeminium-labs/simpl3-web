@@ -25,7 +25,7 @@ export default function Home() {
             <div className="fixed bottom-0 backdrop-blur-md bg-background/10 flex items-center justify-center p-4 md:p-10 w-full">
                 <div className="mx-auto grid w-[450px] gap-6 ">
                     <p className="text-balance text-muted-foreground text-center text-xs">
-                        Want to see it in action?
+                        The protocol for building great (web3) products
                     </p>
                     <div className="grid gap-4">
                         <Button type="submit" className="w-full" size={"lg"} disabled>
