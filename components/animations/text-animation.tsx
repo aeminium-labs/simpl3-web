@@ -11,7 +11,7 @@ const LINES = [
     "Payments",
     "Notifications",
     "Bridging",
-    "Membership",
+    "Workflows",
     "Identity",
     "Accounts",
 ];
@@ -134,7 +134,7 @@ export function TextAnimation({
                     {linesToRender.map((text, idx) => (
                         <span
                             key={idx}
-                            className={cn("transition-opacity text-foreground", getTextOpacity(idx))}
+                            className={cn("transition-all text-foreground", getTextOpacity(idx), idx !== currentLineIndex && "scale-75 origin-right")}
                         >
                             {text}
                         </span>
