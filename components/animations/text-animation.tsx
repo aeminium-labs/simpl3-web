@@ -108,19 +108,18 @@ export function TextAnimation({
     }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
     React.useEffect(() => {
-        // use gyroscope to get position
-        const getGyroscopePosition = (e: DeviceOrientationEvent) => {
-            const newPosition = calculateProportionalPosition(Math.max(0, (e.beta || 0) / 180));
+        // use swipe movement
+        const getTouchPosition = (e: TouchEvent) => {
+            const newPosition = calculateProportionalPosition(Math.max(0, (e.touches[0].clientY || 0) / window.innerHeight));
             const currentLineIndex = getCurrentLineIdx(newPosition);
 
             setCurrentLineIndex(currentLineIndex);
             setPosition(newPosition);
         }
 
-
         if (isMobile) {
-            window.addEventListener("deviceorientation", getGyroscopePosition);
-            return () => window.removeEventListener("deviceorientation", getGyroscopePosition);
+            window.addEventListener("touchmove", getTouchPosition);
+            return () => window.removeEventListener("touchmove", getTouchPosition);
         }
     }, [isMobile, calculateProportionalPosition, getCurrentLineIdx]);
 
