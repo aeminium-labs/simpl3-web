@@ -7,19 +7,26 @@ import { Logo } from "@/components/icons/logo";
 import Link from "next/link";
 import { NewTwitterIcon } from "@/components/icons/huge-icons";
 import { useSimpl3Auth } from "@simpl3/ui";
+import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const { openAuth, isLoggedIn } = useSimpl3Auth();
+    const router = useRouter()
+
+    React.useEffect(() => {
+        if (isLoggedIn) {
+            router.push("/dashboard")
+        }
+    }, [isLoggedIn, router])
 
     return (
         <div className="container h-screen flex flex-col items-start justify-start space max-w-none  px-0">
             <div className="flex-row p-10 flex justify-between dark:border-r w-full z-10">
-                <div className="z-20 flex items-center text-lg font-medium relative text-foreground">
-                    <Logo width={100} height="100%" />
-                </div>
+                <Logo width={100} height="100%" />
                 <div className="flex flex-row gap-2">
-                    <Button variant="outline" size="icon" asChild>
-                        <Link href="http://x.com/simpl3_protocol" target="_blank" className=""><NewTwitterIcon className="h-[1.2rem] w-[1.2rem]" /></Link>
+                    <Button variant="outline" size="icon" asChild className="h-10 w-10">
+                        <Link href="http://x.com/simpl3_protocol" target="_blank" ><NewTwitterIcon className="h-5 w-5" /></Link>
                     </Button>
                     <ThemeToggle />
                 </div>
