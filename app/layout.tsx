@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
+import "@simpl3/ui/dist/style.css";
 import "./globals.css";
 import { inter } from "@/app/fonts";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Analytics } from "@vercel/analytics/react"
-
+import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://www.madesimpl3.com'),
@@ -40,18 +39,13 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
+                <Providers>
                     {children}
-                </ThemeProvider>
-                <Analytics />
+                </Providers>
             </body>
         </html>
     );
