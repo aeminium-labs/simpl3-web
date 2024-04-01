@@ -41,7 +41,7 @@ export default function Home() {
                     </p>
                     <div className="grid gap-4">
                         <Button type="submit" className="w-full" size={"lg"} onClick={openAuth} disabled={isLoggedIn}>
-                            Launching soon!
+                            Get started
                         </Button>
                     </div>
                 </div>
