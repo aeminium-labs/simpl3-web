@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
     const { openAuth, isLoggedIn } = useSimpl3Auth();
-    const router = useRouter()
+    const router = useRouter();
 
     React.useEffect(() => {
         if (isLoggedIn) {

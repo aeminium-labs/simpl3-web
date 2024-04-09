@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,9 +20,34 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/icons/logo";
-import { HomeIcon, MenuSquareIcon, MoreIcon, NewTwitterIcon, NotificationIcon, UserAccountIcon } from "@/components/icons/huge-icons"
+import { HomeIcon, MenuSquareIcon, MoreIcon, NewTwitterIcon, NotificationIcon, UserAccountIcon } from "@/components/icons/huge-icons";
+import { useSimpl3Auth } from "@simpl3/ui";
+import React from "react";
+import { useRouter } from "next/navigation";
+
+export function trimWalletAddress(address: string, chars: number = 5) {
+    if (address.length <= chars * 2) {
+        return address;
+    }
+
+    const firstChars = address.slice(0, chars);
+    const lastChars = address.slice(-chars);
+
+    return `${firstChars}...${lastChars}`;
+}
 
 export default function Dashboard() {
+    const { getAddress, logout, isLoggedIn } = useSimpl3Auth();
+    const router = useRouter()
+
+    React.useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/")
+        }
+    }, [isLoggedIn, router])
+
+    const address = trimWalletAddress(getAddress() || "");
+
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
             <div className="hidden md:block">
@@ -134,12 +161,12 @@ export default function Dashboard() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuLabel>Account <small>({address})</small></DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuItem>Support</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>Logout</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                         <ThemeToggle />
