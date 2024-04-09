@@ -25,7 +25,7 @@ import { useSimpl3Auth } from "@simpl3/ui";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-export function trimWalletAddress(address: string, chars: number = 5) {
+function trimWalletAddress(address: string, chars: number = 5) {
     if (address.length <= chars * 2) {
         return address;
     }
